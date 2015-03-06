@@ -1,0 +1,19 @@
+dependencies:
+  pre:
+    - rm ~/.gitconfig
+    - make deps
+  override:
+    - make build
+  post:
+    - tar -czvf $CIRCLE_ARTIFACTS/s3get-linux.tgz -C build/Linux s3get
+    - tar -czvf $CIRCLE_ARTIFACTS/s3get-darwin.tgz -C build/Darwin s3get
+
+test:
+  override:
+    - /bin/true
+
+deployment:
+  release:
+    branch: release
+    commands:
+      - make release
