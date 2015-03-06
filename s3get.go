@@ -15,6 +15,7 @@ import (
 var Version string
 
 func main() {
+	versionFlag := flag.Bool("version", false, "Version")
 	accessKey := flag.String("access_key", "", "AWS Access Key")
 	secretKey := flag.String("secret_key", "", "AWS Secret Key")
 	sessionToken := flag.String("session_token", "", "AWS Session Token")
@@ -25,6 +26,10 @@ func main() {
 	}
 
 	flag.Parse()
+	if *versionFlag {
+		fmt.Printf("s3get: v%s\n", Version)
+		os.Exit(0)
+	}
 	if len(flag.Args()) != 1 {
 		flag.Usage()
 		os.Exit(1)
