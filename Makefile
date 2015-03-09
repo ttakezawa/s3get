@@ -15,6 +15,8 @@ deps:
 
 release:
 	rm -rf release && mkdir release
+	cp build/Linux $(BINARYNAME) release/$(NAME)_$(VERSION)_Linux_$(ARCH)
+	cp build/Darwin $(BINARYNAME) release/$(NAME)_$(VERSION)_Darwin_$(ARCH)
 	tar -zcf release/$(NAME)_$(VERSION)_Linux_$(ARCH).tgz -C build/Linux $(BINARYNAME)
 	tar -zcf release/$(NAME)_$(VERSION)_Darwin_$(ARCH).tgz -C build/Darwin $(BINARYNAME)
 	gh-release checksums sha256
