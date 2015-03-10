@@ -5,8 +5,8 @@ dependencies:
   override:
     - make build
   post:
-    - tar -czvf $CIRCLE_ARTIFACTS/s3get-linux.tgz -C build/Linux s3get
-    - tar -czvf $CIRCLE_ARTIFACTS/s3get-darwin.tgz -C build/Darwin s3get
+    - tar -czvf $CIRCLE_ARTIFACTS/s3get-linux.tgz -C build/linux_amd64 s3get
+    - tar -czvf $CIRCLE_ARTIFACTS/s3get-darwin.tgz -C build/darwin_amd64 s3get
 
 test:
   override:
