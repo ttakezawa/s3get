@@ -36,7 +36,9 @@ test-docker-image:
 	@echo "OK - $(NAME): v$(VERSION)"
 
 docker-push:
+	docker tag -f $(IMAGE):$(VERSION) $(IMAGE):latest
 	docker push $(IMAGE):$(VERSION)
+	docker push $(IMAGE):latest
 
 clean:
 	rm -rf bin build release
