@@ -6,7 +6,7 @@ Lightweight S3 Download Tool in Golang, based on https://github.com/awslabs/aws-
 
 ## Installation
 
-    curl -L https://github.com/ttakezawa/s3get/releases/download/v1.0.0/s3get_1.0.0_$(uname -sm|tr \  _).tgz \
+    curl -L https://github.com/ttakezawa/s3get/releases/download/v1.0.1/s3get_1.0.1_$(uname -sm|tr \  _).tgz \
       | tar -zxC /usr/local/bin
 
 ## Usage
