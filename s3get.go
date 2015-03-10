@@ -12,7 +12,8 @@ import (
 	"github.com/awslabs/aws-sdk-go/gen/s3"
 )
 
-var Version string
+// Version is the current version of this application.
+const Version string = "1.0.1.dev"
 
 func main() {
 	versionFlag := flag.Bool("version", false, "Version")

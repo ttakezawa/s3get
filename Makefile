@@ -1,28 +1,37 @@
-# Refer: https://github.com/gliderlabs/glidergun/blob/master/Makefile
+NAME = s3get
+VERSION = $(shell awk -F\" '/^const Version/ { print $$2 }' $(NAME).go)
+OSARCH = "linux/amd64 darwin/amd64"
+GITHUB_REPO = ttakezawa/$(NAME)
 
-NAME=s3get
-BINARYNAME=s3get
-ARCH=$(shell uname -m)
-VERSION=1.0.1.dev
+all: build
 
 build:
-	mkdir -p build/Linux  && GOOS=linux  go build -ldflags "-X main.Version $(VERSION)" -o build/Linux/$(BINARYNAME)
-	mkdir -p build/Darwin && GOOS=darwin go build -ldflags "-X main.Version $(VERSION)" -o build/Darwin/$(BINARYNAME)
+	@mkdir -p bin
+	go build -o bin/$(NAME)
 
 deps:
 	go get -u github.com/progrium/gh-release/...
-	go get || true
+	go get -u github.com/mitchellh/gox/...
+	gox -build-toolchain -osarch=$(OSARCH)
+
+xcompile:
+	@mkdir -p build
+	gox -osarch=$(OSARCH) -output="build/{{.Dir}}_$(VERSION)_{{.OS}}_{{.Arch}}/$(NAME)"
 
 release:
-	rm -rf release && mkdir release
-	cp build/Linux $(BINARYNAME) release/$(NAME)_$(VERSION)_Linux_$(ARCH)
-	cp build/Darwin $(BINARYNAME) release/$(NAME)_$(VERSION)_Darwin_$(ARCH)
-	tar -zcf release/$(NAME)_$(VERSION)_Linux_$(ARCH).tgz -C build/Linux $(BINARYNAME)
-	tar -zcf release/$(NAME)_$(VERSION)_Darwin_$(ARCH).tgz -C build/Darwin $(BINARYNAME)
+	@mkdir -p release
+	$(eval FILES := $(shell ls build))
+	for f in $(FILES); do \
+		tar -zcf release/$$f.tgz -C build/$$f $(NAME); \
+	done
 	gh-release checksums sha256
-	gh-release create ttakezawa/$(NAME) $(VERSION) $(shell git rev-parse --abbrev-ref HEAD) v$(VERSION)
+	gh-release create $(GITHUB_REPO) $(VERSION) $(shell git rev-parse --abbrev-ref HEAD) v$(VERSION)
+
+docker-build:
+	docker build -t ttakezawa/s3get:$(VERSION) .
+	@test "$(NAME): v$(VERSION)" = "$$(docker run --rm ttakezawa/s3get:$(VERSION) --version)"
 
 clean:
-	rm -rf build release
+	rm -rf bin build release
 
-.PHONY: build release
+.PHONY: all build deps xcompile release docker-build docker-push
