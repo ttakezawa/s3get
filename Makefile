@@ -14,7 +14,6 @@ build:
 deps:
 	go get -u github.com/progrium/gh-release/...
 	go get -u github.com/mitchellh/gox/...
-	gox -build-toolchain -osarch=$(OSARCH)
 
 xcompile:
 	@mkdir -p build
@@ -34,7 +33,7 @@ docker-build:
 
 test-docker-image:
 	@test "$(NAME): v$(VERSION)" = "$$(docker run --rm $(IMAGE):$(VERSION) --version)"
-	@echo "OK. $(NAME): v$(VERSION)"
+	@echo "OK - $(NAME): v$(VERSION)"
 
 docker-push:
 	docker push $(IMAGE):$(VERSION)
@@ -42,4 +41,4 @@ docker-push:
 clean:
 	rm -rf bin build release
 
-.PHONY: all build deps xcompile release docker-build docker-push
+.PHONY: all build deps xcompile release docker-build test-docker-image docker-push
