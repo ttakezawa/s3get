@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/awslabs/aws-sdk-go/aws"
-	"github.com/awslabs/aws-sdk-go/gen/s3"
+	"github.com/awslabs/aws-sdk-go/service/s3"
 )
 
 // Version is the current version of this application.
@@ -46,11 +46,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	creds := aws.DetectCreds(*accessKey, *secretKey, *sessionToken)
-	cli := s3.New(creds, *region, nil)
+	svc := s3.New(&aws.Config{
+		Credentials: aws.DetectCreds(*accessKey, *secretKey, *sessionToken),
+		Region:      *region,
+	})
 
-	resp, err := cli.GetObject(
-		&s3.GetObjectRequest{
+	resp, err := svc.GetObject(
+		&s3.GetObjectInput{
 			Bucket: aws.String(objectURL.Host),
 			Key:    aws.String(strings.TrimLeft(objectURL.Path, "/")),
 		},

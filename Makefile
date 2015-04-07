@@ -7,19 +7,27 @@ IMAGE = ttakezawa/$(NAME)
 
 all: build
 
-build:
+build: deps
 	@mkdir -p bin
 	go build -o bin/$(NAME)
 
 deps:
+	go get github.com/progrium/gh-release/...
+	go get github.com/mitchellh/gox/...
+	go get github.com/awslabs/aws-sdk-go/aws/...
+	go get github.com/awslabs/aws-sdk-go/service/s3/...
+
+updatedeps:
 	go get -u github.com/progrium/gh-release/...
 	go get -u github.com/mitchellh/gox/...
+	go get -u github.com/awslabs/aws-sdk-go/aws/...
+	go get -u github.com/awslabs/aws-sdk-go/service/s3/...
 
-xcompile:
+xcompile: deps
 	@mkdir -p build
 	gox -osarch=$(OSARCH) -output="build/{{.OS}}_{{.Arch}}/$(NAME)"
 
-release:
+release: deps
 	@mkdir -p release
 	$(eval FILES := $(shell ls build))
 	for f in $(FILES); do \
