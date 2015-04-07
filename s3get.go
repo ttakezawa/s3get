@@ -13,7 +13,7 @@ import (
 )
 
 // Version is the current version of this application.
-const Version string = "1.0.1"
+const Version string = "1.0.2.dev"
 
 func main() {
 	versionFlag := flag.Bool("version", false, "Version")
